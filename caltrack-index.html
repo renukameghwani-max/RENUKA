@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CalTrack - Calorie Counter</title>
+    <link rel="stylesheet" href="caltrack-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <div class="app-header">
+            <div class="header-content">
+                <h1 class="app-title"><i class="fas fa-leaf"></i> CalTrack</h1>
+                <p class="current-date" id="currentDate"></p>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="screens-container">
+            
+            <!-- DASHBOARD SCREEN -->
+            <div class="screen active" id="dashboardScreen">
+                <div class="screen-content">
+                    <!-- Greeting -->
+                    <div class="greeting" id="greeting"></div>
+
+                    <!-- Progress Ring -->
+                    <div class="progress-ring-container">
+                        <svg class="progress-ring" viewBox="0 0 200 200">
+                            <circle class="progress-ring-bg" cx="100" cy="100" r="90"></circle>
+                            <circle class="progress-ring-fill" cx="100" cy="100" r="90" id="progressRing"></circle>
+                        </svg>
+                        <div class="progress-text">
+                            <div class="remaining-calories" id="remainingCalories">2000</div>
+                            <div class="remaining-label">Remaining</div>
+                            <div class="consumed-calories" id="consumedCalories">0 / 2000</div>
+                        </div>
+                    </div>
+
+                    <!-- Macro Summary Cards -->
+                    <div class="macro-cards">
+                        <div class="macro-card">
+                            <div class="macro-icon protein"><i class="fas fa-drumstick-bite"></i></div>
+                            <div class="macro-info">
+                                <div class="macro-name">Protein</div>
+                                <div class="macro-value" id="proteinValue">0g / 120g</div>
+                                <div class="macro-bar">
+                                    <div class="macro-progress protein-progress" id="proteinProgress"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="macro-card">
+                            <div class="macro-icon carbs"><i class="fas fa-bread-slice"></i></div>
+                            <div class="macro-info">
+                                <div class="macro-name">Carbs</div>
+                                <div class="macro-value" id="carbsValue">0g / 300g</div>
+                                <div class="macro-bar">
+                                    <div class="macro-progress carbs-progress" id="carbsProgress"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="macro-card">
+                            <div class="macro-icon fats"><i class="fas fa-droplet"></i></div>
+                            <div class="macro-info">
+                                <div class="macro-name">Fat</div>
+                                <div class="macro-value" id="fatsValue">0g / 70g</div>
+                                <div class="macro-bar">
+                                    <div class="macro-progress fats-progress" id="fatsProgress"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Add Section -->
+                    <div class="quick-add-section">
+                        <h3 class="section-title">Quick Add</h3>
+                        <div class="quick-add-chips">
+                            <button class="chip" data-food="Apple">🍎 Apple</button>
+                            <button class="chip" data-food="Banana">🍌 Banana</button>
+                            <button class="chip" data-food="Egg">🥚 Egg</button>
+                            <button class="chip" data-food="Chicken Breast">🍗 Chicken</button>
+                            <button class="chip" data-food="White Rice (1 cup cooked)">🍚 Rice</button>
+                            <button class="chip" data-food="Whole Wheat Bread (1 slice)">🍞 Bread</button>
+                        </div>
+                    </div>
+
+                    <!-- Water Tracking -->
+                    <div class="water-tracking-section">
+                        <h3 class="section-title">Water Intake</h3>
+                        <div class="water-container">
+                            <div class="water-display">
+                                <div class="water-count" id="waterCount">0</div>
+                                <div class="water-label">/ 8 glasses</div>
+                            </div>
+                            <button class="btn-water-add" id="addWaterBtn">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                        <div class="water-glasses" id="waterGlasses"></div>
+                    </div>
+
+                    <!-- Today's Meals -->
+                    <div class="meals-section">
+                        <h3 class="section-title">Today's Meals</h3>
+                        <div class="meals-container" id="mealsContainer">
+                            <div class="empty-state">
+                                <i class="fas fa-utensils"></i>
+                                <p>No meals logged yet today. Tap + to add your first meal!</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Daily Summary -->
+                    <div class="daily-summary" id="dailySummary">
+                        <p>Start logging meals to see your daily summary</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ADD FOOD SCREEN -->
+            <div class="screen" id="addFoodScreen">
+                <div class="screen-content">
+                    <div class="add-food-header">
+                        <h2>Add Food</h2>
+                        <p>Search from our database or create a custom food</p>
+                    </div>
+
+                    <!-- Search Bar -->
+                    <div class="search-container">
+                        <i class="fas fa-search"></i>
+                        <input 
+                            type="text" 
+                            id="foodSearch" 
+                            class="search-input" 
+                            placeholder="Search foods..."
+                            autocomplete="off"
+                        >
+                    </div>
+
+                    <!-- Search Results -->
+                    <div class="search-results" id="searchResults"></div>
+
+                    <!-- Tabs for Food Database vs Custom -->
+                    <div class="add-food-tabs">
+                        <button class="tab-btn active" data-tab="database">Food Database</button>
+                        <button class="tab-btn" data-tab="custom">Create Custom</button>
+                    </div>
+
+                    <!-- Food Database Tab -->
+                    <div class="tab-content active" id="databaseTab">
+                        <div class="food-list" id="foodList"></div>
+                    </div>
+
+                    <!-- Custom Food Tab -->
+                    <div class="tab-content" id="customTab">
+                        <div class="custom-food-form">
+                            <div class="form-group">
+                                <label for="customFoodName">Food Name</label>
+                                <input type="text" id="customFoodName" placeholder="e.g., My Pasta">
+                            </div>
+                            <div class="form-group">
+                                <label for="customServingSize">Serving Size</label>
+                                <input type="text" id="customServingSize" placeholder="e.g., 1 cup">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="customCalories">Calories</label>
+                                    <input type="number" id="customCalories" placeholder="0" min="0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="customProtein">Protein (g)</label>
+                                    <input type="number" id="customProtein" placeholder="0" min="0" step="0.1">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="customCarbs">Carbs (g)</label>
+                                    <input type="number" id="customCarbs" placeholder="0" min="0" step="0.1">
+                                </div>
+                                <div class="form-group">
+                                    <label for="customFats">Fat (g)</label>
+                                    <input type="number" id="customFats" placeholder="0" min="0" step="0.1">
+                                </div>
+                            </div>
+                            <button class="btn-primary" id="createCustomFoodBtn">Create Food</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FOOD DETAIL MODAL -->
+            <div class="modal" id="foodDetailModal">
+                <div class="modal-content">
+                    <button class="modal-close" id="closeFoodDetail">&times;</button>
+                    <h2 id="foodDetailName"></h2>
+                    <div class="food-detail-info" id="foodDetailInfo"></div>
+                    
+                    <div class="detail-form">
+                        <div class="form-group">
+                            <label for="servings">Servings</label>
+                            <div class="servings-control">
+                                <button class="btn-minus" id="decreaseServings">−</button>
+                                <input type="number" id="servings" value="1" min="1" step="0.5">
+                                <button class="btn-plus" id="increaseServings">+</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="mealType">Meal Type</label>
+                            <select id="mealType" class="form-select">
+                                <option value="Breakfast">Breakfast</option>
+                                <option value="Lunch">Lunch</option>
+                                <option value="Dinner">Dinner</option>
+                                <option value="Snacks">Snacks</option>
+                            </select>
+                        </div>
+
+                        <div class="detail-calories">
+                            <div class="calorie-info">
+                                <span>Total Calories:</span>
+                                <span id="detailCalories" class="cal-value">0</span>
+                            </div>
+                            <div class="calorie-info">
+                                <span>Protein:</span>
+                                <span id="detailProtein">0g</span>
+                            </div>
+                            <div class="calorie-info">
+                                <span>Carbs:</span>
+                                <span id="detailCarbs">0g</span>
+                            </div>
+                            <div class="calorie-info">
+                                <span>Fat:</span>
+                                <span id="detailFats">0g</span>
+                            </div>
+                        </div>
+
+                        <button class="btn-primary" id="logFoodBtn">Log Food</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HISTORY SCREEN -->
+            <div class="screen" id="historyScreen">
+                <div class="screen-content">
+                    <div class="history-header">
+                        <h2>Today's Log</h2>
+                        <button class="btn-clear-all" id="clearAllBtn">Clear All</button>
+                    </div>
+
+                    <div class="history-container" id="historyContainer">
+                        <div class="empty-state">
+                            <i class="fas fa-history"></i>
+                            <p>No meals logged yet. Add your first meal to get started!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SETTINGS SCREEN -->
+            <div class="screen" id="settingsScreen">
+                <div class="screen-content">
+                    <h2 class="settings-title">Settings</h2>
+
+                    <!-- Calorie Goal -->
+                    <div class="settings-section">
+                        <h3 class="section-title">Daily Calorie Goal</h3>
+                        <div class="settings-group">
+                            <label for="calorieGoal">Daily Goal (kcal)</label>
+                            <input 
+                                type="number" 
+                                id="calorieGoal" 
+                                min="500" 
+                                max="5000" 
+                                step="50"
+                                class="settings-input"
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Macro Targets -->
+                    <div class="settings-section">
+                        <h3 class="section-title">Macro Targets</h3>
+                        <div class="settings-group">
+                            <label for="proteinTarget">Protein Target (g)</label>
+                            <input 
+                                type="number" 
+                                id="proteinTarget" 
+                                min="0" 
+                                step="1"
+                                class="settings-input"
+                            >
+                        </div>
+                        <div class="settings-group">
+                            <label for="carbsTarget">Carbs Target (g)</label>
+                            <input 
+                                type="number" 
+                                id="carbsTarget" 
+                                min="0" 
+                                step="1"
+                                class="settings-input"
+                            >
+                        </div>
+                        <div class="settings-group">
+                            <label for="fatsTarget">Fats Target (g)</label>
+                            <input 
+                                type="number" 
+                                id="fatsTarget" 
+                                min="0" 
+                                step="1"
+                                class="settings-input"
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Theme Toggle -->
+                    <div class="settings-section">
+                        <h3 class="section-title">Appearance</h3>
+                        <div class="settings-group toggle-group">
+                            <label for="darkModeToggle">Dark Mode</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="darkModeToggle">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Reset Today -->
+                    <div class="settings-section">
+                        <h3 class="section-title">Data Management</h3>
+                        <button class="btn-danger" id="resetTodayBtn">Reset Today's Log</button>
+                    </div>
+
+                    <!-- Save Settings -->
+                    <button class="btn-primary btn-save-settings" id="saveSettingsBtn">Save Settings</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <button class="nav-item active" data-screen="dashboardScreen">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </button>
+            <button class="nav-item" data-screen="addFoodScreen">
+                <i class="fas fa-plus"></i>
+                <span>Add Food</span>
+            </button>
+            <button class="nav-item" data-screen="historyScreen">
+                <i class="fas fa-history"></i>
+                <span>History</span>
+            </button>
+            <button class="nav-item" data-screen="settingsScreen">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </button>
+        </nav>
+
+        <!-- Toast Notification -->
+        <div class="toast" id="toast"></div>
+
+        <!-- Confirmation Dialog -->
+        <div class="dialog-overlay" id="dialogOverlay">
+            <div class="dialog">
+                <h2 id="dialogTitle">Confirm</h2>
+                <p id="dialogMessage">Are you sure?</p>
+                <div class="dialog-buttons">
+                    <button class="btn-secondary" id="dialogCancel">Cancel</button>
+                    <button class="btn-danger" id="dialogConfirm">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="caltrack-app.js"></script>
+</body>
+</html>
